@@ -45,7 +45,7 @@ class MainActivity : ComponentActivity() {
         .registerTypeAdapter(dataPass::class.java, DataPassAdapter())
         .create()
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.233:5000/api/pwd/")
+        .baseUrl("http://192.168.1.119:5000/api/pwd/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val apiService = retrofit.create(ApiService::class.java)
@@ -78,11 +78,12 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(dataPwd: List<dataPass>?) {
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    Log.e("INFO", "Longitud del dataPWD: ${dataPwd?.size}")
+    /*LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(dataPwd){pwds->
             text()
         }
-    }
+    }*/
 }
 
 fun text(){
