@@ -14,15 +14,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.gson.GsonBuilder
 import com.oskar.pwd002v2.controller.DataPassAdapter
+import com.oskar.pwd002v2.controller.pwdViewModel
 import com.oskar.pwd002v2.obj.dataPass
 import com.oskar.pwd002v2.retrofit.ApiService
 import com.oskar.pwd002v2.ui.theme.PWD002V2Theme
@@ -32,10 +39,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
 
-    var idUserData = mutableStateOf("")
-    var idData: MutableState<String?> = mutableStateOf("")
-    var titleData: MutableState<String?> = mutableStateOf("")
-    var bodyData: MutableState<String?> = mutableStateOf("")
     var dataPwd: List<dataPass>? = null
 
     /*val retrofit = Retrofit.Builder()
@@ -53,7 +56,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("onCreate", "Inicio del onCreate")
+        /*Log.d("onCreate", "Inicio del onCreate")
         lifecycleScope.launch {
             try {
                 dataPwd = apiService.getPWDbyId("activision")
@@ -61,16 +64,28 @@ class MainActivity : ComponentActivity() {
             } catch (e: Exception) {
                 Log.e("ERROR", "No se obtuvo datos: ${e.message}")
             }
-        }
+        }*/
         enableEdgeToEdge()
         setContent {
             PWD002V2Theme {
-                Greeting(
-                    dataPwd
+                GreetingScreen(
                 )
             }
         }
     }
+}
+
+@Composable
+fun GreetingScreen() {
+    val viewModelStoreOwner = LocalViewModelStoreOwner.current
+    val viewModel: pwdViewModel = viewModel(
+        viewModelStoreOwner = viewModelStoreOwner!!,
+        key = "pwdViewModel",
+        factory = ViewModelProvider.NewInstanceFactory()
+    )
+    val dataPwd by viewModel.dataPwd.collectAsState()
+
+    Greeting(dataPwd)
 }
 
 @Composable
