@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -57,10 +58,6 @@ class MainActivity : ComponentActivity() {
             try {
                 dataPwd = apiService.getPWDbyId("activision")
                 Log.d("mostrar datos obtenidos", "Post: ${dataPwd}")
-                /*post.forEach{data ->
-                    idUserData.value = data.ID.toString()
-                    titleData.value = data.TITLE
-                }*/
             } catch (e: Exception) {
                 Log.e("ERROR", "No se obtuvo datos: ${e.message}")
             }
@@ -78,16 +75,23 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(dataPwd: List<dataPass>?) {
-    Log.e("INFO", "Longitud del dataPWD: ${dataPwd?.size}")
-    /*LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(dataPwd){pwds->
-            text()
+    Log.d("INFO", "Longitud del dataPWD: ${dataPwd?.size}")
+    val nonNullDataPwd = dataPwd ?: emptyList()
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+        items(nonNullDataPwd){ pwd->
+            ItemRow(pwd)
         }
-    }*/
+    }
 }
-
-fun text(){
-
+@Composable
+fun ItemRow(pwd: dataPass){
+    Column (modifier = Modifier.padding(5.dp)){
+        Text(text = "ID > "+pwd.ID.toString())
+        Text(text = "Date > "+pwd.FECHMODIF)
+        Text(text = "TITLE > "+pwd.TITLE)
+        Text(text = "USER > "+pwd.USERNAME)
+        Text(text = "Password > "+pwd.USERPASSWORD)
+    }
 }
 
 /*@Preview(showBackground = true)
